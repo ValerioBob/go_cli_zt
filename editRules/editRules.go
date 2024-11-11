@@ -42,6 +42,23 @@ func EditRules(nwid string) {
 	}
 	defaultRules = rulesDir + "/default.ztrules"
 
+	if _, err := os.Stat(defaultRules); os.IsNotExist(err) {
+
+		// Create folder if not exists
+		if err := os.MkdirAll(rulesDir, 0755); err != nil {
+			ztcommon.WriteLogs("Error creating rules directory: " + rulesDir)
+			ztcommon.PtermErrMsg("Error creating rules directory: " + rulesDir + ": " + err.Error())
+			return
+		}
+
+		// Copy default file from rule-compiler
+		if !ztcommon.CopyFile("rule-compiler/examples/default.ztrules", defaultRules) {
+			ztcommon.WriteLogs("Error copying default rules file: rule-compiler/examples/default.ztrules to " + defaultRules)
+			ztcommon.PtermErrMsg("Error copying default rules file: rule-compiler/examples/default.ztrules to " + defaultRules)
+			return
+		}
+	}
+
 	app := tview.NewApplication()
 
 	// If the source file doesn't exist, create it witht default rules.
