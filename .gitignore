@@ -6,6 +6,6 @@ go.work
 go.work.sum
 ztdeetsDevel.txt
 editRules/ruleeditor.txt
-logs/logs.txt
+
 sqlite/*
 rule-compiler/node.exe
