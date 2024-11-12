@@ -31,15 +31,21 @@ func EditRules(nwid string) {
 
 	getOS := runtime.GOOS
 
+	var nodePath string
+
 	if strings.HasPrefix(getOS, "windows") {
-
-		cmdToCompile = "rule-compiler/node.exe rule-compiler/cli.js " + tempCompileFile
-
+		nodePath = "rule-compiler/node.exe"
 	} else {
-
-		cmdToCompile = "rule-compiler/node rule-compiler/cli.js " + tempCompileFile
-
+		nodePath = "rule-compiler/node"
 	}
+
+	//Use system-wide Node.js if local executable is unavailable
+	if _, err := os.Stat(nodePath); os.IsNotExist(err) {
+		nodePath = "node"
+	}
+
+	cmdToCompile = nodePath + " rule-compiler/cli.js " + tempCompileFile
+
 	defaultRules = rulesDir + "/default.ztrules"
 
 	if _, err := os.Stat(defaultRules); os.IsNotExist(err) {
